@@ -3,6 +3,7 @@
 # Download op-deployer pre-built binary
 # Based on the tutorial instructions
 
+# 脚本执行失败立即退出
 set -e
 
 # Colors for output
@@ -228,11 +229,13 @@ show_manual_instructions() {
 main() {
     log_info "Downloading op-deployer..."
 
+    # 检查curl是否安装
     if ! command -v curl &> /dev/null; then
         log_error "curl is required but not installed"
         exit 1
     fi
 
+    # 检查jq是否安装
     if ! command -v jq &> /dev/null; then
         log_error "jq is required but not installed"
         exit 1
