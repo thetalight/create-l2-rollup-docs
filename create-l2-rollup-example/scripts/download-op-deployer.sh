@@ -151,6 +151,7 @@ download_op_deployer() {
     
     # tag_name: op-deployer/v0.5.0-rc.2
     # asset_name:
+    # https://github.com/ethereum-optimism/optimism/releases/download/op-deployer/v0.5.0-rc.2/op-deployer-0.5.0-rc.2-darwin-amd64.tar.gz
     local download_url="https://github.com/ethereum-optimism/optimism/releases/download/$tag_name/$asset_name"
 
     log_info "Downloading op-deployer $tag_name for $platform..."
