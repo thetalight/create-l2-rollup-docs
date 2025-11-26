@@ -491,12 +491,17 @@ main() {
     mkdir -p "$DEPLOYER_DIR"
 
     validate_main_env
+    #  检查op-deployer是否安装
     check_prerequisites
+    # 这里产生的是假地址，包括：admin base_fee_vault_recipient l1_fee_vault_recipient sequencer_fee_vault_recipient system_config unsafe_block_signer batcher proposer challenger
     generate_addresses
+    # 
     init_deployer
     update_intent
     deploy_contracts
+    # 主要生成两个配置 1.genesis.json  2.rollup.json
     generate_config
+    # 这一步还创建了一个JWT
     setup_sequencer
     setup_batcher
     setup_proposer
