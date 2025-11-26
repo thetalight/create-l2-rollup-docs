@@ -96,13 +96,16 @@ download_op_deployer() {
 
     # Get all releases and find the latest one with op-deployer assets
     local latest_deployer_release
+    # sort -V | tail -1  ------ 按版本排序，取最新的一条
     latest_deployer_release=$(curl -s "$releases_url?per_page=50" | jq -r '.[] | select(.tag_name | startswith("op-deployer/")) | .tag_name' | sort -V | tail -1)
 
+    # -z 判断字符串长度是否为0
     if [ -z "$latest_deployer_release" ]; then
         log_error "Could not find any op-deployer releases"
         exit 1
     fi
 
+    # 
     local tag_name="$latest_deployer_release"
     log_info "Found latest op-deployer release: $tag_name"
 
@@ -116,8 +119,10 @@ download_op_deployer() {
     fi
 
     local has_deployer_assets
+    # wc -l 用于统计函数，如 wc -l file.txt 
     has_deployer_assets=$(echo "$release_info" | jq -r '.assets[] | select(.name | contains("op-deployer")) | .name' | wc -l)
 
+    # 数值比较全部加 -
     if [ "$has_deployer_assets" -eq 0 ]; then
         log_error "Release $tag_name does not have op-deployer assets"
         exit 1
@@ -143,7 +148,9 @@ download_op_deployer() {
         log_info "Please check: https://github.com/ethereum-optimism/optimism/releases/tag/$tag_name"
         exit 1
     fi
-
+    
+    # tag_name: op-deployer/v0.5.0-rc.2
+    # asset_name:
     local download_url="https://github.com/ethereum-optimism/optimism/releases/download/$tag_name/$asset_name"
 
     log_info "Downloading op-deployer $tag_name for $platform..."
@@ -164,8 +171,12 @@ download_op_deployer() {
 
     # Look for the extracted directory first
     local extracted_dir
+    # 在当前目录及其子目录找到第一个名字以op-deployer-开头的目录
+    # -type d 只匹配目录
     extracted_dir=$(find . -name "op-deployer-*" -type d | head -1)
 
+    # -n 判断字符串是否非空
+    # -f 判断文件是否存在
     if [ -n "$extracted_dir" ] && [ -f "$extracted_dir/op-deployer" ]; then
         binary_path="$extracted_dir/op-deployer"
     elif [ -f "op-deployer" ]; then
